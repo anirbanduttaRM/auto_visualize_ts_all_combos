@@ -1,0 +1,30 @@
+def visualize_ts(df, t, y, forecasts, start, end, country, store, product):
+    
+    idx = (df[t] >= start) & (df[t] < end) & (df['country'] == country) & (df['store'] == store) & (df['product'] == product)
+    
+    fig, ax = plt.subplots(figsize=(24, 6), dpi=100)
+    ax.plot(df.loc[idx].set_index(t)[y], linewidth=2, label=y)
+    if forecasts is not None:
+        for forecast in forecasts:
+            ax.plot(df.loc[idx].set_index(t)[forecast], linewidth=2, label=forecast)
+    ax.tick_params(axis='x', labelsize=12.5, pad=10)
+    ax.tick_params(axis='y', labelsize=12.5, pad=10)
+    ax.set_title(f'[{start}, {end}) - {country} - {store} - {product}', size=20, pad=15)
+    ax.legend(prop={'size': 18})
+    plt.show()
+    
+    
+for country in countries:
+    for store in stores:
+        for product in products:
+            visualize_ts(
+                df=train,
+                t='date',
+                y='num_sold',
+                forecasts=None,
+                start='2017-01-01',
+                end='2020-01-01',
+                country=country,
+                store=store,
+                product=product
+            )
